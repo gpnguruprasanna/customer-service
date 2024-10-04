@@ -1,11 +1,15 @@
 package com.guru.microservice.customer_service.requestDto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Date;
 @Data
+@ToString
 public class CustomerRequestDto {
-    private int custId;
+    private Long custId;
     private String custName;
     private String firstName;
     private String lastName;

@@ -1,6 +1,6 @@
 package com.guru.microservice.customer_service.configurations;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class CustomerServiceConfiguration {
 
     @Bean
-    public ObjectMapper getObjectMapper(){
-        return new ObjectMapper();
+    public ModelMapper getModelMapper(){
+        return new ModelMapper();
     }
 }

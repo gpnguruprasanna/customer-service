@@ -1,15 +1,16 @@
 package com.guru.microservice.customer_service.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
+@Data
 public class Customer {
     @Id
     @Column(name="cust_id")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long custId;
 
     @Column(name="cust_name")

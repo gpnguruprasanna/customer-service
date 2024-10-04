@@ -1,7 +1,9 @@
 package com.guru.microservice.customer_service.responseDto;
 
-import java.util.Date;
+import lombok.Data;
 
+import java.util.Date;
+@Data
 public class CustomerReponseDto {
     private int custId;
     private String custName;
