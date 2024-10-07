@@ -1,15 +1,23 @@
 package com.guru.microservice.customer_service.controller;
 
+import com.guru.microservice.customer_service.entity.Customer;
 import com.guru.microservice.customer_service.requestDto.CustomerRequestDto;
 import com.guru.microservice.customer_service.responseDto.CustomerReponseDto;
 import com.guru.microservice.customer_service.responseDto.ResponseDto;
 import com.guru.microservice.customer_service.responseDto.ResponseError;
 import com.guru.microservice.customer_service.service.CustomerService;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.querydsl.core.types.Predicate;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,8 +51,10 @@ public class CustomerController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDto> getAllCustomers() {
-        List<CustomerReponseDto> customerReponseDtoList = customerService.getAllCustomer();
+    public ResponseEntity<ResponseDto> getAllCustomers(@QuerydslPredicate(root = Customer.class) Predicate predicate,
+                                                       @PageableDefault(sort = {"custId"}, direction = Sort.Direction.ASC, size = 5)
+                                                       @Parameter(hidden = true) Pageable pageRequest) {
+        Page<CustomerReponseDto> customerReponseDtoList = customerService.getAllCustomer( predicate,  pageRequest);
         ResponseDto responseDto = new ResponseDto(HttpStatus.OK.value(), Boolean.TRUE, customerReponseDtoList, null);
         return ResponseEntity.of(Optional.of(responseDto));
     }

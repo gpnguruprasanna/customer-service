@@ -6,8 +6,12 @@ import com.guru.microservice.customer_service.repository.CustomerRepository;
 import com.guru.microservice.customer_service.requestDto.CustomerRequestDto;
 import com.guru.microservice.customer_service.responseDto.CustomerReponseDto;
 import com.guru.microservice.customer_service.service.CustomerService;
+import com.querydsl.core.types.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,10 +45,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerReponseDto> getAllCustomer() {
-        List<Customer> customerList = customerRepository.findAll();
+    public Page<CustomerReponseDto> getAllCustomer(Predicate predicate, Pageable pageRequest) {
+        Page<Customer> customerPage = customerRepository.findAll(predicate,pageRequest);
         Function<Customer, CustomerReponseDto> reponseDtoFunction = (customer) -> modelMapper.map(customer, CustomerReponseDto.class);
-        return customerList.stream().map(reponseDtoFunction).collect(Collectors.toList());
+        List<CustomerReponseDto> customerList=  customerPage.stream().map(reponseDtoFunction).collect(Collectors.toList());
+        return new PageImpl<>(customerList,pageRequest,customerPage.getTotalElements());
     }
 
     @Override
