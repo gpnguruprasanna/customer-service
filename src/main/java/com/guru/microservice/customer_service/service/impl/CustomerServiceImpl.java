@@ -1,11 +1,13 @@
 package com.guru.microservice.customer_service.service.impl;
 
 import com.guru.microservice.customer_service.entity.Customer;
+import com.guru.microservice.customer_service.entity.QCustomer;
 import com.guru.microservice.customer_service.exceptions.CustomerNotFoundException;
 import com.guru.microservice.customer_service.repository.CustomerRepository;
 import com.guru.microservice.customer_service.requestDto.CustomerRequestDto;
 import com.guru.microservice.customer_service.responseDto.CustomerReponseDto;
 import com.guru.microservice.customer_service.service.CustomerService;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -46,6 +50,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Page<CustomerReponseDto> getAllCustomer(Predicate predicate, Pageable pageRequest) {
+        /*
+
+        Collection<Predicate> predicates = new ArrayList();
+        QCustomer qcustomer=QCustomer.customer;
+        Predicate predicate1=qcustomer.custId.goe(5);
+        predicates.add(predicate);
+        predicates.add(predicate1);
+        Predicate predicateAll = ExpressionUtils.allOf(predicates);
+        Page<Customer> customerPage = customerRepository.findAll(predicateAll,pageRequest);*/
         Page<Customer> customerPage = customerRepository.findAll(predicate,pageRequest);
         Function<Customer, CustomerReponseDto> reponseDtoFunction = (customer) -> modelMapper.map(customer, CustomerReponseDto.class);
         List<CustomerReponseDto> customerList=  customerPage.stream().map(reponseDtoFunction).collect(Collectors.toList());

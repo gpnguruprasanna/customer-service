@@ -15,6 +15,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
+import java.util.Locale;
 
 @Log4j2
 @RestControllerAdvice
@@ -30,14 +31,14 @@ public class GlobalExxceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler({CustomerNotFoundException.class})
+  /*  @ExceptionHandler({CustomerNotFoundException.class})
     public ResponseEntity<Object> customerNotFoundException(final CustomerNotFoundException ex, final WebRequest request, HttpServletResponse response) {
         log.info(ex.getClass().getName());
         log.error("customerNotFoundException error", ex);
         final ResponseError error = new ResponseError(HttpStatus.NOT_FOUND.getReasonPhrase(), List.of(ex.getMessage()));
         ResponseDto responseError = new ResponseDto(HttpStatus.NOT_FOUND.value(), Boolean.FALSE, null, error);
         return new ResponseEntity<>(responseError, new HttpHeaders(), HttpStatus.NOT_FOUND);
-    }
+    }*/
 
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -47,6 +48,22 @@ public class GlobalExxceptionHandler extends ResponseEntityExceptionHandler {
         final String errorMessage = "No handler found for " + ex.getHttpMethod() + " " + ex.getRequestURL();
         final ResponseError error = new ResponseError(HttpStatus.NOT_FOUND.getReasonPhrase(), List.of(errorMessage));
         ResponseDto responseError = new ResponseDto(HttpStatus.NOT_FOUND.value(), Boolean.FALSE, null, error);
+        return new ResponseEntity<>(responseError, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }
+
+   /* @ExceptionHandler( CustomerNotFoundException.class)
+    public ResponseEntity<Object> customerNotFoundException(final CustomerNotFoundException ex, final Locale locale) {
+        log.info(ex.getClass().getName());
+        final ResponseError error = new ResponseError(HttpStatus.NOT_FOUND.toString(), List.of(ex.getMessage()));
+        ResponseDto responseError =  new ResponseDto(HttpStatus.NOT_FOUND.value(), Boolean.FALSE,null, error);
+        return new ResponseEntity<>(responseError, new HttpHeaders(), HttpStatus.NOT_FOUND);
+    }*/
+
+    @ExceptionHandler( RuntimeException.class)
+    public ResponseEntity<Object> NotFoundException(final RuntimeException ex, final Locale locale) {
+        log.info(ex.getClass().getName());
+        final ResponseError error = new ResponseError(HttpStatus.NOT_FOUND.toString(), List.of(ex.getMessage()));
+        ResponseDto responseError =  new ResponseDto(HttpStatus.NOT_FOUND.value(), Boolean.FALSE,null, error);
         return new ResponseEntity<>(responseError, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 }
